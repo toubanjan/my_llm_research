@@ -4,6 +4,8 @@
 
 本提案書は、RWKV-7の内部隠れ状態および時間混合（Time-Mixing）機構を複素数空間 $\mathbb{C}^d$ へ拡張し、蔵本モデル（Kuramoto Model）に基づく位相共鳴ダイナミクスを組み込んだ次世代アーキテクチャ「C-RWKV-7（Complex-Valued RWKV-7）」およびその段階的導入手法を定義するものです。
 
+本アーキテクチャは、自然言語処理（LLM）、音声・音響信号処理およびリアルタイムストリーミング処理等の広範なシーケンス処理タスクに適用および発展が期待されます。
+
 ---
 
 ## 2. 背景と解決する課題（Motivation & Problem Statement）
@@ -84,11 +86,22 @@ $$h_{t+1}^{(c)} = \underbrace{\left( r_t \odot \text{decay}_t \right) \cdot \exp
 
 $$W^{(c)} = W_{\text{pretrained}} + i \cdot \mathbf{0}, \quad B^{(c)} = \mathbf{0}$$
 
+### 4.2 C-LoRA (Complex Low-Rank Adaptation) の数理構造
+
+事前学習済みの実数重み $W_{\text{real}} \in \mathbb{R}^{d_{\text{out}} \times d_{\text{in}}}$ を凍結（Frozen）したまま、複素差分重み $\Delta W^{(c)} \in \mathbb{C}^{d_{\text{out}} \times d_{\text{in}}}$ を低ランク分解行列  $A^{(c)} \in \mathbb{C}^{r \times d_{\text{in}}}$, $B^{(c)} \in \mathbb{C}^{d_{\text{out}} \times r}$（ $r \ll \min(d_{\text{in}}, d_{\text{out}})$ ）により導入します。
+
+$$y^{(c)} = W_{\text{real}} x + \frac{\alpha}{r} \left( B^{(c)} A^{(c)} \right) x^{(c)}$$
+
+* **初期化条件（Zero-Shot Equivalence）**:
+  $$A^{(c)} \sim \mathcal{CN}\left(0, \frac{1}{r}\right), \quad B^{(c)} = \mathbf{0} + i\mathbf{0}$$
+  初期状態（Step 0）において $\Delta W^{(c)} = \mathbf{0}$ となるため、実数事前学習モデルの知識および出力を100%保持した状態で微調整を開始できます。
+
+
 ---
 
 ## 5. 堅牢化・完全化された PyTorch 参照実装
 
-原点付近（$r \to 0$）の極座標特異点回避、動的結合係数 $K_t$、KV結合処理、および位相同期モニタリング機能を完全統合したセル実装です。
+原点付近（ $r \to 0$ ）の極座標特異点回避、動的結合係数 $K_t$、KV結合処理、および位相同期モニタリング機能を完全統合したセル実装です。
 
 ```python
 import torch
@@ -180,6 +193,8 @@ $$R_t = \left\vert \frac{1}{d} \sum_{j=1}^d e^{i \theta_{t, j}} \right\vert \in 
 
 $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{Task}} + \lambda_{\text{phase}} \cdot \frac{1}{T} \sum_{t=1}^T \left( R_t - R_{\text{target}} \right)^2$$
 
+なお、 $R_{\text{target}}$  はタスクやチャネル数に応じて $0.0 < R_{\text{target}} < 1.0$ の範囲で動的または固定で設定可能です。
+
 ---
 
 ## 7. ハードウェア最適化・Tritonカーネル設計
@@ -189,7 +204,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{Task}} + \lambda_{\text{phase}
 1. **BF16 パッキング（Split-Complex Layout）**:
 メモリ転送時は複素数を個別の配列ではなく、[Batch, Dim, 2]（実部, 虚部）の連続領域として BF16 精度で配置し、L1/L2 キャッシュのヒット率を最大化。
 2. **Fused Phase-Update Kernel**:
-三角関数（$\sin, \cos$）および平均場集約（`mean_sin`, `mean_cos`）を単一の SRAM ブロック内で完了させ、VRAM への書き戻しレイテンシを削減。
+三角関数（ $\sin, \cos$ ）および平均場集約（`mean_sin`, `mean_cos`）を単一の SRAM ブロック内で完了させ、VRAM への書き戻しレイテンシを削減。
 
 ---
 
