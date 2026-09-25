@@ -33,7 +33,7 @@ RNNやLinear Attention構造を持つモデル（RWKV等）は、計算量 $\mat
 $$h_t^{(c)} = h_t^{\text{real}} + i \, h_t^{\text{imag}} = r_t \odot e^{i \theta_t}$$
 
 * **振幅 ($r_t = \vert{}h_t^{(c)}\vert{}$)**: 情報の強度・概念の確信度（旧来の実数出力の基盤）。
-* **位相 ($\theta_t = \arg(h_t^{(c)})$)**: 概念間の文脈的役割・相対位置・依存関係。
+* **位相 ( $\theta_t = \arg(h_t^{(c)})$ )**: 概念間の文脈的役割・相対位置・依存関係。
 
 ### 3.2 動的結合項を伴う $\mathcal{O}(d)$ 蔵本位相共鳴
 
