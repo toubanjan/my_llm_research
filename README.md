@@ -2,6 +2,7 @@
 The ideas presented here were developed in collaboration with AI.
 
 ## Infinite-RoSA (v2.0)
+
 > **Dense Every-Token Retrieval for RWKV-8 via Dynamic Context-Adapted Rank-$K$ Attractors and Speculative Prefetching**
 
 #### Abstract (English)
@@ -22,7 +23,10 @@ By harmonizing continuous **Hopfield Attractor Dynamics** ( $\beta_t = \beta_0 \
 
 [Full Document](./idea4_2.md)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23105432.svg)](https://doi.org/10.5281/zenodo.23105432)
+
 ## H-RWKV (Hamiltonian RWKV)
+
 > **Constant-Memory $\mathcal{O}(1)$ Iterative Reasoning via Phase-Space Attractor Dynamics and Implicit Function Theorem**
 
 #### Abstract (English)
@@ -42,3 +46,5 @@ The architecture introduces three mathematical and systems-level innovations:
 By harmonizing symplectic phase-space integration with implicit differentiation, H-RWKV enables deep iterative reasoning with minimal memory consumption, zero context window degradation, and stable gradient flow.
 
 [Full Document](./idea_3.md)
+
+[![DOI]https://zenodo.org/badge/DOI/10.5281/zenodo.23105009.svg](https://doi.org/10.5281/zenodo.23105009)
