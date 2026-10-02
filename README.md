@@ -47,4 +47,4 @@ By harmonizing symplectic phase-space integration with implicit differentiation,
 
 [Full Document](./idea_3.md)
 
-[![DOI]https://zenodo.org/badge/DOI/10.5281/zenodo.23105009.svg](https://doi.org/10.5281/zenodo.23105009)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23105009.svg)](https://doi.org/10.5281/zenodo.23105009)
