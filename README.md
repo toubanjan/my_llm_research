@@ -18,7 +18,7 @@ The architecture introduces three mathematical and systems-level innovations:
    $$k_i' = k_i + \text{MLP}_k(k_i \odot q_t) \quad , \quad v_i' = v_i + \text{MLP}_v(v_i \odot q_t)$$
 3. **IVF Speculative Cluster Prefetching**: Uses probabilistic centroid transition paths $P(C_m \mid q_t, \Delta q_t)$ to asynchronously stream candidate memory blocks from CPU/NVMe storage into VRAM L1 cache via CUDA Streams, bypassing I/O stalls during decoding.
 
-By harmonizing continuous **Hopfield Attractor Dynamics** ($\beta_t = \beta_0 \cdot g(q_t)$) with RWKV's inherent **Time Decay** ($e^{-\mathbf{w}}$), Infinite-RoSA v2.0 achieves dense every-token retrieval with high factual accuracy, zero crosstalk noise, and robust noise tolerance.
+By harmonizing continuous **Hopfield Attractor Dynamics** ( $\beta_t = \beta_0 \cdot g(q_t)$ ) with RWKV's inherent **Time Decay** ( $e^{-\mathbf{w}}$ ), Infinite-RoSA v2.0 achieves dense every-token retrieval with high factual accuracy, zero crosstalk noise, and robust noise tolerance.
 
 [Full Document](./idea4_2.md)
 
